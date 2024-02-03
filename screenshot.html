@@ -10,6 +10,8 @@ featured: true
 hidden: true
 ---
 
+# Take screenshot when Selenium/Appium fails using Java
+
 When it comes to debugging the failed test cases in selenium or appium having a screenshot of the web or mobile application can be very much handy.
 99% of the time one can identify the reason for automated test case failure just by seeing the screenshot at the time of failure without having to go through the logs dump.
 
@@ -18,7 +20,7 @@ In this article we are going to discuss the following:
 * situations where selenium fails to take a screenshot
 * How to take a screenshot with only java code without using selenium
 
-#### Take a screenshot using selenium
+### Take a screenshot using selenium
 
 Below code snippet, can be used to generate the screenshot using selenium.
 
@@ -38,7 +40,7 @@ public class Screenshot {
 
 For more details on different ways of taking screenshot using selenium please follow the [link]()
 
-#### Why do we need to take a screenshot using java?
+### Why do we need to take a screenshot using java?
 
 Most of the time taking screenshot using selenium are more than enough. But in some cases selenium won't be able to take the screenshot.
 * When browser window went not responding state
@@ -49,7 +51,7 @@ In most companies, mobile devices provided for executing automation test cases a
 
 In the above-mentioned scenarios, as we won't be able to take screenshots using Selenium, it is a better approach to take the entire desktop/system screenshot using java.  
 
-#### Taking a screenshot using java?
+### Taking a screenshot using java?
 
 The below approach uses java.awt.Robot class to capture the screen pixels and returns a BufferedImage. 
 
@@ -79,7 +81,7 @@ public void captureScreen(String fileName) throws Exception {
 }
 ```
 
-#### Integrating the Java screenshot with Selenium screenshot code
+### Integrating the Java screenshot with Selenium screenshot code
 
 It is always recommended to use Selenium for taking a screenshot. In case selenium is not able to take the screenshot then we should take the screenshot using java or any other programming language we are using to write selenium code.
 
