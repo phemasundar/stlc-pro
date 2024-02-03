@@ -16,12 +16,17 @@
           rel="stylesheet" type="text/css"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet"/>
+    <!-- Bootstrap CSS -->
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!-- Prism CSS for code highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/themes/prism.min.css" rel="stylesheet">
 </head>
 <body>
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="index.html">Start Bootstrap</a>
+        <a class="navbar-brand" href="index.html">STLCpro</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             Menu
@@ -38,7 +43,7 @@
     </div>
 </nav>
 <!-- Page Header-->
-<header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
+<header class="masthead" style="background-image: url('assets/img/screenshot.png')">
     <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
@@ -73,78 +78,71 @@
 
                 <h2 class="section-heading">Take a screenshot using selenium</h2>
 
-                <p>Below code snippet, can be used to generate the screenshot using selenium.
+                <p>Below code snippet, can be used to generate the screenshot using selenium.</p>
 
-                    ```java
-                    public class Screenshot {
-                    public static void getScreenshot(WebDriver driver, String fileName) {
-                    try {
-                    File screenshotFileObj = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-                    FileUtils.copyFile(screenshotFileObj, new File(fileName));
-
-                    } catch (Exception e) {
-                    //TODO: Handle the exception
-                    }
-                    }
-                    }
-                    ```
-
-                    For more details on different ways of taking screenshot using selenium please follow the [link]()
-                </p>
+                <pre><code class="language-java">public class Screenshot {
+    public static void getScreenshot(WebDriver driver, String fileName) {
+        try {
+            File screenshotFileObj = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(screenshotFileObj, new File(fileName));
+        } catch (Exception e) {
+            //TODO: Handle the exception
+        }
+    }
+}</code></pre>
+                <p>For more details on different ways of taking screenshot using selenium please follow the [link]()</p>
 
                 <h2 class="section-heading">Why do we need to take a screenshot using java?</h2>
 
-                <p>
-                    Most of the time taking screenshot using selenium are more than enough. But in some cases selenium
-                    won't be able to take the screenshot.
-                    * When browser window went not responding state
-                    * When the driver object got killed because of some issue
-                    * In case of Mobile automation test cases, when the device rejects appium driver access because of
-                    some administrator app takes control of the device
 
-                    In most companies, mobile devices provided for executing automation test cases are managed by the
+                <p>Most of the time taking screenshot using selenium are more than enough. But in some cases selenium
+                    won't be able to take the screenshot.</p>
+                * When browser window went not responding state
+                * When the driver object got killed because of some issue
+                * In case of Mobile automation test cases, when the device rejects appium driver access because of
+                some administrator app takes control of the device
+
+                <p>In most companies, mobile devices provided for executing automation test cases are managed by the
                     company itself. And they can access the device by using some schedulers or using some backend users.
                     For example, when the test cases are running on the mobile device, if the auto-update process
                     started, it will restrict the access to Appium driver. In this case, while trying to take screenshot
-                    Appium will throw WebDriverException.
+                    Appium will throw WebDriverException.</p>
 
-                    In the above-mentioned scenarios, as we won't be able to take screenshots using Selenium, it is a
+                <p>In the above-mentioned scenarios, as we won't be able to take screenshots using Selenium, it is a
                     better approach to take the entire desktop/system screenshot using java.
                 </p>
 
                 <h2 class="section-heading">Taking a screenshot using java?</h2>
                 <p>
                     The below approach uses java.awt.Robot class to capture the screen pixels and returns a
-                    BufferedImage.
+                    BufferedImage.</p>
 
-                    Java.awt.Robot class is used to take control of mouse and keyboard. Once you get the control, you
-                    can do any type of operation related to mouse and keyboard through your java code.
+                <p>Java.awt.Robot class is used to take control of mouse and keyboard. Once you get the control, you
+                    can do any type of operation related to mouse and keyboard through your java code.</p>
 
-                    Copy and paste the following code in your Java class and invoke the method captureScreen() with the
+                <p>Copy and paste the following code in your Java class and invoke the method captureScreen() with the
                     file name as argument. The screenshot will be stored in the file that you specified in the argument.
-
-                    ```html
-                    import java.awt.Dimension;
-                    import java.awt.Rectangle;
-                    import java.awt.Robot;
-                    import java.awt.Toolkit;
-                    import java.awt.image.BufferedImage;
-                    import javax.imageio.ImageIO;
-                    import java.io.File;
-
-                    public void captureScreen(String fileName) throws Exception {
-
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    Rectangle screenRectangle = new Rectangle(screenSize);
-
-                    Robot robot = new Robot();
-
-                    BufferedImage image = robot.createScreenCapture(screenRectangle);
-                    ImageIO.write(image, "png", new File(fileName));
-
-                    }
-                    ```
                 </p>
+                <pre><code class="language-java">import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+
+public void captureScreen(String fileName) throws Exception {
+
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    Rectangle screenRectangle = new Rectangle(screenSize);
+
+    Robot robot = new Robot();
+
+    BufferedImage image = robot.createScreenCapture(screenRectangle);
+    ImageIO.write(image, "png", new File(fileName));
+
+}</code></pre>
+
 
                 <h2 class="section-heading">Integrating the Java screenshot with Selenium screenshot code</h2>
                 <p>
@@ -152,33 +150,30 @@
                     take
                     the screenshot then we should take the screenshot using java or any other programming language we
                     are
-                    using to write selenium code.
+                    using to write selenium code.</p>
 
-                    Please take a look at the below code:
+                <p>Please take a look at the below code:</p>
+                <pre><code class="language-java">public static void getScreenshot(WebDriver driver, String fileName) {
+    try {
+        File screenshotFileObj = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(screenshotFileObj, new File(fileName));
 
-                    ```html
-                    public static void getScreenshot(WebDriver driver, String fileName) {
-                    try {
-                    File screenshotFileObj = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-                    FileUtils.copyFile(screenshotFileObj, new File(fileName));
+    } catch (Exception e) {
+        try {
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            Rectangle screenRectangle = new Rectangle(screenSize);
 
-                    } catch (Exception e) {
-                    try {
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    Rectangle screenRectangle = new Rectangle(screenSize);
+            Robot robot = new Robot();
 
-                    Robot robot = new Robot();
+            BufferedImage image = robot.createScreenCapture(screenRectangle);
+            ImageIO.write(image, "png", new File(fileName));
 
-                    BufferedImage image = robot.createScreenCapture(screenRectangle);
-                    ImageIO.write(image, "png", new File(fileName));
-
-                    }catch (IOException | AWTException e1) {
-                    //TODO: log the exception
-                    }
-                    }
-                    }
-                    ```
-
+        }catch (IOException | AWTException e1) {
+            //TODO: log the exception
+        }
+    }
+}</code></pre>
+                <p>
                     I hope the above approach helps. Please let me know in the comments if any other ways of doing this.
                 </p>
             </div>
@@ -225,5 +220,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
 <script src="js/scripts.js"></script>
+
+<!-- Prism JS for code highlighting -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-java.min.js"></script>
+
 </body>
 </html>
