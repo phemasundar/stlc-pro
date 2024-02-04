@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>STLCpro - Screenshot Selenium</title>
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+          rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../css/styles.css" rel="stylesheet"/>
+    <!-- Bootstrap CSS -->
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!-- Prism CSS for code highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="../index.html">STLCpro</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('../assets/img/multithreading.jpeg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>Importance of ThreadLocal in parallel execution of test cases</h1>
+                    <h2 class="subheading">Handling multithreading issues with ThreadLocal variables</h2>
+                    <span class="meta">
+                                Posted by
+                                <a href="#!">HemaSundar Penugonda</a>
+                                on June 18, 2020
+                            </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content-->
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p>Executing test cases in parallel sounds interesting and when we want to implement, it looks very easy
+                    as we just need to update some settings in the TestNG XML file. But parallel or multi-thread
+                    executing is a lot more complex than it seems from outside. If something goes wrong in the
+                    multi-threaded environment, it is very difficult to debug or identify the issue.</p>
+
+                <p>The main reason for the complexity of the parallel execution of test cases is not in configuring the
+                    threads but in blocking data to leak in between threads. Below are the common challenges:</p>
+                <ul>
+                    <li>Keeping the variables local to the current thread. It means two different threads should not be
+                        able to read/write a variable.
+                    </li>
+                    <li>Sharing the data in between the threads without multiple threads being able to write/override a
+                        variable at the same time.
+                    </li>
+                    <li>Multiple threads should not be able to call the same method having write operations at the same
+                        time
+                    </li>
+                </ul>
+
+                <p>In the current article, we are going to discuss how to implement the first point.</p>
+
+                <h2 class="section-heading">What is ThreadLocal variable</h2>
+
+
+                <p>ThreadLocal is a type of variable introduced in java 1.2. It will make sure the variable is local to
+                    the
+                    current thread only. Whenever we want to use static variables to be used as local to a current
+                    thread,
+                    we can define it as ThreadLocal Type.</p>
+                <h2 class="section-heading">How ThreadLocal works internally</h2>
+
+
+                <p>Internally ThreadLocal works on HashMap. When you initialize a ThreadLocal variable, internally java
+                    will create a HashMap with key as Thread ID/Name and value as ThreadLocal's variable value for that
+                    thread. So when we try to get the value of the ThreadLocal variable, it will return the value of the
+                    current
+                    thread. Once the thread is dead, the ThreadLocal's current thread value is marked for garbage
+                    collecting.</p>
+
+                <h2 class="section-heading">Will ThreadLocal be a performance hit?</h2>
+
+
+                <p>As mentioned in the above section, ThreadLocal internally works on HashMap having an individual entry
+                    for each thread. So let us say if the Object is heavy and we have more threads in parallel then it
+                    can
+                    be a performance hit.</p>
+
+                <p>So it is always recommended to have local non-static variables to keep any variable as local to the
+                    current thread. When one can not maintain that the next option is to go ThreadLocal variable
+                    type.</p>
+                <h2 class="section-heading">How to Use ThreadLocal?</h2>
+
+
+                <p>Below is the concise information on how to use a ThreadLocal variable. For detailed use of Thread
+                    local
+                    please follow the link</p>
+
+                <h3 class="section-sub-heading">Create a variable</h3>
+
+                <pre><code class="language-java">ThreadLocal myThreadLocal = new ThreadLocal<String>();</code></pre>
+
+                <h3 class="section-sub-heading">assign value to ThreadLocal</h3>
+                <pre><code class="language-java">myThreadLocal.set("Hello ThreadLocal");</code></pre>
+
+                <h3 class="section-sub-heading">get ThreadLocal value</h3>
+
+                <pre><code class="language-java">String threadLocalValue = myThreadLocal.get();</code></pre>
+                <h2 class="section-heading">Problems where ThreadLocal is Useful</h2>
+
+
+                <p>Below am going to discuss a problem that I faced personally where using ThreadLocal can save the
+                    day.</p>
+
+                <h3 class="section-sub-heading">Problem:</h3>
+
+
+                <p>I am trying to execute a test in multiple browsers, in parallel using TestNG.
+                    But it is always considering the second-mentioned browsers only.</p>
+
+                <h3 class="section-sub-heading">TestNG.xml</h3>
+
+                <pre><code class="language-xml">
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <suite name="Parallel Tests" verbose="1" thread-count="10" parallel="tests">
+                    <tests>
+                        <test name="Test1">
+                            <parameters>
+                                <parameter name="platform" value="Windows"/>
+                                <parameter name="browser" value="chrome"/>
+                                <parameter name="version" value="8"/>
+                            </parameters>
+                            <classes>
+                                <class name="com.tribune.uiautomation.testscripts.TestEngine"/>
+                            </classes>
+                        </test> <!-- Test -->
+
+                        <test name="Test2">
+                            <parameters>
+                                <parameter name="platform" value="Windows"/>
+                                <parameter name="browser" value="firefox"/>
+                                <parameter name="version" value="8"/>
+                            </parameters>
+                            <classes>
+                                <class name="com.tribune.uiautomation.testscripts.TestEngine"/>
+                            </classes>
+                        </test> <!-- Test -->
+
+                    </tests>
+                </suite> <!-- Suite -->
+                </code></pre>
+
+                <h3 class="section-sub-heading">TestEngine class:</h3>
+
+                <pre><code class="language-java">public class testEngine {
+    @BeforeTest
+    @Parameters("browser")
+    public void beforeTest(String browser){
+        Property.BrowserName = browser;
+        System.out.println("BrowserName got from XML is "+Property.BrowserName);
+    }
+
+    @Test
+    public void executeTest() {
+        //code for launching browser & performing tests...
+    }
+}</code></pre>
+
+                <pre><code class="language-txt">
+Console output is similar to:
+log4j:WARN [] should be System.out or System.err.
+log4j:WARN Using previously set target, System.out by default.
+[TestNG] Running:
+D:\Selenium_Projects\WorkSpace_Personal\TribuneWebScriptLess\TestNG.xml
+
+BrowserName got from XML is chrome
+BrowserName got from XML is firefox</code></pre>
+
+                <p>After the second log statement of firefox, it is considering only firefox browser only (i.e. both
+                    the tests mentioned in TestNG.xml are running in firefox only)</p>
+
+                <h3 class="section-sub-heading">Reason:</h3>
+
+
+                <p>In the framework, the WebDriver object is a static variable. In Java, Static variables are used to
+                    share the data between the threads. So when the second thread assigns a value to the static variable
+                    it overrides the value set by the first thread. This causes the problem.</p>
+
+                <h3 class="section-sub-heading">Solution using ThreadLocal:</h3>
+
+
+                <p>We just need to change the WebDriver object type to ThreadLocal. That's it. The problem will solve
+                    automatically.</p>
+
+
+                <p>I hope the above approach helps. Please let me know in the comments if any other ways of doing
+                    this.</p>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+<!-- Footer-->
+<footer class="border-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="https://www.linkedin.com/in/hemasundarpenugonda/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/phemasundar">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://github.com/phemasundar">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; www.STLCpro.com 2024</div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="../js/scripts.js"></script>
+
+<!-- Prism JS for code highlighting -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-java.min.js"></script>
+
+</body>
+</html>
