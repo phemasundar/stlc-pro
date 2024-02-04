@@ -125,7 +125,7 @@
 
                 <h3 class="section-sub-heading">Create a variable</h3>
 
-                <pre><code class="language-java">ThreadLocal myThreadLocal = new ThreadLocal<String>();</code></pre>
+                <pre><code class="language-java">ThreadLocal myThreadLocal = new ThreadLocal<xmp><String></xmp>();</code></pre>
 
                 <h3 class="section-sub-heading">assign value to ThreadLocal</h3>
                 <pre><code class="language-java">myThreadLocal.set("Hello ThreadLocal");</code></pre>
@@ -147,35 +147,33 @@
 
                 <h3 class="section-sub-heading">TestNG.xml</h3>
 
-                <pre><code class="language-xml">
-                    <?xml version="1.0" encoding="UTF-8"?>
-                    <suite name="Parallel Tests" verbose="1" thread-count="10" parallel="tests">
-                    <tests>
-                        <test name="Test1">
-                            <parameters>
-                                <parameter name="platform" value="Windows"/>
-                                <parameter name="browser" value="chrome"/>
-                                <parameter name="version" value="8"/>
-                            </parameters>
-                            <classes>
-                                <class name="com.tribune.uiautomation.testscripts.TestEngine"/>
-                            </classes>
-                        </test> <!-- Test -->
+                <pre><code class="language-xml"><xmp><?xml version="1.0" encoding="UTF-8"?>
+<suite name="Parallel Tests" verbose="1" thread-count="10" parallel="tests">
+<tests>
+    <test name="Test1">
+        <parameters>
+            <parameter name="platform" value="Windows"/>
+            <parameter name="browser" value="chrome"/>
+            <parameter name="version" value="8"/>
+        </parameters>
+        <classes>
+            <class name="com.tribune.uiautomation.testscripts.TestEngine"/>
+        </classes>
+    </test> <!-- Test -->
 
-                        <test name="Test2">
-                            <parameters>
-                                <parameter name="platform" value="Windows"/>
-                                <parameter name="browser" value="firefox"/>
-                                <parameter name="version" value="8"/>
-                            </parameters>
-                            <classes>
-                                <class name="com.tribune.uiautomation.testscripts.TestEngine"/>
-                            </classes>
-                        </test> <!-- Test -->
+    <test name="Test2">
+        <parameters>
+            <parameter name="platform" value="Windows"/>
+            <parameter name="browser" value="firefox"/>
+            <parameter name="version" value="8"/>
+        </parameters>
+        <classes>
+            <class name="com.tribune.uiautomation.testscripts.TestEngine"/>
+        </classes>
+    </test> <!-- Test -->
 
-                    </tests>
-                </suite> <!-- Suite -->
-                </code></pre>
+</tests>
+</suite><!-- Suite --></xmp></code></pre>
 
                 <h3 class="section-sub-heading">TestEngine class:</h3>
 
