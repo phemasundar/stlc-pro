@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>STLCpro - Configuring Logs</title>
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+          rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../css/styles.css" rel="stylesheet"/>
+    <!-- Bootstrap CSS -->
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!-- Prism CSS for code highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="../index.html">STLCpro</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('../assets/img/screenshot.png')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>Configure Logs in Cucumber/ TestNG using Log4J2</h1>
+                    <!--                    <h2 class="subheading">Problems look mighty small from 150 miles up</h2>-->
+                    <span class="meta">
+                                Posted by
+                                <a href="#!">HemaSundar Penugonda</a>
+                                on Jan 14, 2024
+                            </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content-->
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p></p>
+                <p></p>
+
+                <p>In this article we are going to discuss the following:
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+
+                <h2 class="section-heading">Implementing Custom Log Appender</h2>
+
+                <p></p>
+
+                <pre><code class="language-java">package com.hema.acs.api.bags.utils;
+
+import com.hema.acs.api.bags.test_data_beans.ScenarioContext;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Core;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
+import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
+import org.apache.logging.log4j.core.config.plugins.PluginElement;
+import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+
+@Plugin(
+        name = "CucumberLogAppender",
+        category = Core.CATEGORY_NAME,
+        elementType = Appender.ELEMENT_TYPE)
+public class CucumberLogAppender extends AbstractAppender {
+    protected CucumberLogAppender(String name, Filter filter) {
+        super(name, filter, null, true, Property.EMPTY_ARRAY);
+    }
+
+    @PluginFactory
+    public static CucumberLogAppender createAppender(@PluginAttribute("name") String name, @PluginElement("Filter") Filter filter) {
+        return new CucumberLogAppender(name, filter);
+    }
+
+    @Override
+    public void append(LogEvent event) {
+        ScenarioContext.getInstance().getCurrentScenario().log(event.getMessage().getFormattedMessage());
+    }
+}</code></pre>
+                <p></p>
+
+                <h2 class="section-heading">Log4J2 configuration</h2>
+
+                <pre><code class="language-json">{
+  "configuration": {
+    "status": "error",
+    "name": "JSONConfigDemo",
+    "packages": "com.hemasundar.test_automation.test_automation_api",
+    "ThresholdFilter": {
+      "level": "debug"
+    },
+    "CustomLevels": {
+      "CustomLevel": {
+        "name": "NAME_TEST",
+        "intLevel": "50"
+      }
+    },
+    "appenders": {
+      "Console": {
+        "name": "STDOUT",
+        "PatternLayout": {
+          "pattern": "%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"
+        }
+      },
+      "CucumberLogAppender": {
+        "name": "STDOUT",
+        "PatternLayout": {
+          "pattern": "%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"
+        }
+      },
+      "RollingFile": {
+        "name": "File",
+        "fileName": "target/surefire-reports/log.log",
+        "filePattern": "logs/backup-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz",
+        "PatternLayout": {
+          "pattern": "%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"
+        },
+        "Policies": {
+          "SizeBasedTriggeringPolicy": {
+            "size": "100 MB"
+          }
+        },
+        "DefaultRolloverStrategy": {
+          "max": "10"
+        }
+      }
+    },
+    "loggers": {
+      "root": {
+        "level": "debug",
+        "AppenderRef": [
+          {
+            "ref": "STDOUT",
+            "level": "info"
+          },
+          {
+            "ref": "File",
+            "level": "info"
+          }
+        ]
+      }
+    }
+  }
+}</code></pre>
+                <p></p>
+
+                <h2 class="section-heading">Sample class with log usage</h2>
+                <pre><code class="language-java">package com.hema.acs.api.bags.stepdefs;
+
+import com.hema.acs.api.bags.api_requests.DedomenaApis;
+import com.hema.acs.api.bags.test_data_beans.ScenarioContext;
+import com.hema.acs.api.bags.utils.CustomLogging;
+import io.cucumber.java.*;
+import lombok.extern.log4j.Log4j2;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author hemasundarpenugonda
+ */
+@Log4j2
+public class ServiceHooks {
+
+    @Before(order = 1)
+    public void printScenarioDetails(Scenario scenario) {
+        log.info(CustomLogging.getLogMessage("\n"));
+        log.info(CustomLogging.getLogMessage("---------------------------));
+        log.info(CustomLogging.getLogMessage("  " + scenario.getUri()));
+        log.info(CustomLogging.getLogMessage("  " + scenario.getName()));
+        log.info(CustomLogging.getLogMessage("---------------------------"));
+        log.info(CustomLogging.getLogMessage("\n"));
+    }
+}</code></pre>
+                <p></p>
+
+                <h2 class="section-heading">Custom Log utility class</h2>
+                <pre><code class="language-java">package com.hema.acs.api.bags.utils;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import org.apache.logging.log4j.Level;
+
+/**
+ * The type Custom logging.
+ * These are the static Logging function to use across the framework
+ *
+ * @author hemasundarpenugonda
+ */
+public class CustomLogging {
+
+    public static String getLogMessage(Object message) {
+        return LogDetails.builder()
+                .message(message)
+                .build()
+                .getFullMessage();
+    }
+
+    @Getter
+    @Builder
+    private static class LogDetails {
+        @Builder.Default
+        private Level logLevel = Level.INFO;
+        @Builder.Default
+        private String prefix = "";
+        @NonNull
+        private Object message;
+        @Builder.Default
+        private String[] testDataToHighlight = new String[]{};
+
+        public String getFullMessage() {
+            String fullMessage = this.getMessage().toString();
+
+            for (String str : this.getTestDataToHighlight()) {
+                fullMessage = fullMessage.replace(str, " <b>" + str + "</b>");
+            }
+
+            if (!this.getPrefix().isBlank()) {
+                fullMessage = this.getPrefix() + ": " + fullMessage;
+            }
+            return fullMessage;
+        }
+    }
+}</code></pre>
+                <p></p>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+<!-- Footer-->
+<footer class="border-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="https://www.linkedin.com/in/hemasundarpenugonda/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/phemasundar">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://github.com/phemasundar">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; www.STLCpro.com 2024</div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="../js/scripts.js"></script>
+
+<!-- Prism JS for code highlighting -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-java.min.js"></script>
+
+</body>
+</html>
