@@ -49,12 +49,12 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="post-heading">
-                    <h1>Configure Logs in Cucumber/ TestNG using Log4J2</h1>
+                    <h1>Optimizing Log Strategy in Cucumber Test Automation with Java using Log4J</h1>
                     <!--                    <h2 class="subheading">Problems look mighty small from 150 miles up</h2>-->
                     <span class="meta">
                                 Posted by
                                 <a href="#!">HemaSundar Penugonda</a>
-                                on Jan 14, 2024
+                                on Feb 08, 2025
                             </span>
                 </div>
             </div>
@@ -66,22 +66,40 @@
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-                <p></p>
-                <p></p>
+                <p>In any test automation framework, an effective logging strategy plays a crucial role in improving
+                    maintainability and debugging efficiency. Well-structured logs provide valuable insights into test
+                    execution, making it easier to analyze failures and understand test behavior.</p>
 
-                <p>In this article we are going to discuss the following:
+                <p>Below are some key reasons why logging is essential:</p>
                 <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <li>Facilitates efficient debugging and issue resolution.</li>
+                    <li>Enhances test reports by providing detailed step-by-step execution insights.</li>
                 </ul>
 
-                <h2 class="section-heading">Implementing Custom Log Appender</h2>
+                <h2 class="section-heading">Do We Need a Third-Party Logging Library?</h2>
 
-                <p></p>
+                <p>Java provides built-in logging utilities through the <code>System.out</code> class, which allow logs
+                    to be printed to the console or written to files. However, achieving advanced logging features such
+                    as rolling file logs, HTML report integration, or structured logging requires extensive custom
+                    implementation. To simplify this, third-party libraries like <b>SLF4J</b>, <b>Log4J</b>, or <b>Logback</b> can be
+                    leveraged.</p>
+                <p>Among these, Log4J is widely adopted in test automation projects. This article focuses on configuring
+                    Log4J in a Cucumber-based test automation framework to implement an efficient logging strategy.</p>
 
-                <pre><code class="language-java">package com.hema.acs.api.bags.utils;
+                <h2 class="section-heading">Aspect-Oriented Programming (AOP) and Logging</h2>
 
+                <p>Logging is not a core business requirement but a cross-cutting concern. To maintain clean code
+                    architecture, it is essential to separate logging logic from business logic. This ensures better
+                    maintainability and modularity.</p>
+
+                <h2 class="section-heading">Implementing a Custom Log Appender</h2>
+
+                <p>To seamlessly integrate logs into Cucumber reports, a custom Log4J appender can be created. Below is
+                    an implementation of a <code>CucumberLogAppender</code> that captures log messages and associates
+                    them with the respective Cucumber scenario.</p>
+
+
+                <pre><code class="language-java">
 import com.hema.acs.api.bags.test_data_beans.ScenarioContext;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Core;
@@ -114,8 +132,10 @@ public class CucumberLogAppender extends AbstractAppender {
     }
 }</code></pre>
                 <p></p>
-
-                <h2 class="section-heading">Log4J2 configuration</h2>
+                <h2 class="section-heading">Configuring Log4J2 for the Framework</h2>
+                <p>The following <b>Log4J2 JSON configuration</b> demonstrates how to set up different logging
+                    appenders, including console logging, rolling file logging, and our custom
+                    <code>CucumberLogAppender</code>:</p>
 
                 <pre><code class="language-json">{
   "configuration": {
@@ -179,10 +199,10 @@ public class CucumberLogAppender extends AbstractAppender {
   }
 }</code></pre>
                 <p></p>
-
-                <h2 class="section-heading">Sample class with log usage</h2>
-                <pre><code class="language-java">package com.hema.acs.api.bags.stepdefs;
-
+                <h2 class="section-heading">Utilizing Logging in Code</h2>
+                <p>Once Log4J is configured, logging can be seamlessly integrated into the code. The following example
+                    demonstrates logging scenario details before execution.</p>
+                <pre><code class="language-java">
 import com.hema.acs.api.bags.api_requests.DedomenaApis;
 import com.hema.acs.api.bags.test_data_beans.ScenarioContext;
 import com.hema.acs.api.bags.utils.CustomLogging;
@@ -209,59 +229,17 @@ public class ServiceHooks {
     }
 }</code></pre>
                 <p></p>
+                <h2 class="section-heading">Conclusion</h2>
+                <p>A well-structured logging strategy in a test automation framework enhances debugging capabilities and
+                    improves test reporting. By integrating Log4J with Cucumber, we can capture meaningful logs, ensure
+                    better traceability, and make troubleshooting more efficient. Implementing a custom log appender
+                    allows direct integration with Cucumber reports, making logs more relevant and useful for test
+                    analysis.</p>
+                <p>By following the principles of <b>Aspect-Oriented Programming (AOP)</b>, we maintain a clean
+                    separation of concerns, ensuring that logging does not interfere with business logic. Implementing
+                    such strategies makes test automation frameworks more efficient, scalable, and maintainable.</p>
 
-                <h2 class="section-heading">Custom Log utility class</h2>
-                <pre><code class="language-java">package com.hema.acs.api.bags.utils;
-
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import org.apache.logging.log4j.Level;
-
-/**
- * The type Custom logging.
- * These are the static Logging function to use across the framework
- *
- * @author hemasundarpenugonda
- */
-public class CustomLogging {
-
-    public static String getLogMessage(Object message) {
-        return LogDetails.builder()
-                .message(message)
-                .build()
-                .getFullMessage();
-    }
-
-    @Getter
-    @Builder
-    private static class LogDetails {
-        @Builder.Default
-        private Level logLevel = Level.INFO;
-        @Builder.Default
-        private String prefix = "";
-        @NonNull
-        private Object message;
-        @Builder.Default
-        private String[] testDataToHighlight = new String[]{};
-
-        public String getFullMessage() {
-            String fullMessage = this.getMessage().toString();
-
-            for (String str : this.getTestDataToHighlight()) {
-                fullMessage = fullMessage.replace(str, " <b>" + str + "</b>");
-            }
-
-            if (!this.getPrefix().isBlank()) {
-                fullMessage = this.getPrefix() + ": " + fullMessage;
-            }
-            return fullMessage;
-        }
-    }
-}</code></pre>
                 <p></p>
-
-
             </div>
         </div>
     </div>
