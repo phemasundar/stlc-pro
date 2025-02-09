@@ -81,8 +81,8 @@
                 <p>Java provides built-in logging utilities through the <code>System.out</code> class, which allow logs
                     to be printed to the console or written to files. However, achieving advanced logging features such
                     as rolling file logs, HTML report integration, or structured logging requires extensive custom
-                    implementation. To simplify this, third-party libraries like <b>SLF4J</b>, <b>Log4J</b>, or <b>Logback</b> can be
-                    leveraged.</p>
+                    implementation. To simplify this, third-party libraries like <b>SLF4J</b>, <b>Log4J</b>, or <b>Logback</b>
+                    can be leveraged.</p>
                 <p>Among these, Log4J is widely adopted in test automation projects. This article focuses on configuring
                     Log4J in a Cucumber-based test automation framework to implement an efficient logging strategy.</p>
 
@@ -218,14 +218,10 @@ import java.util.List;
 @Log4j2
 public class ServiceHooks {
 
-    @Before(order = 1)
+    @Before
     public void printScenarioDetails(Scenario scenario) {
-        log.info(CustomLogging.getLogMessage("\n"));
-        log.info(CustomLogging.getLogMessage("---------------------------));
-        log.info(CustomLogging.getLogMessage("  " + scenario.getUri()));
-        log.info(CustomLogging.getLogMessage("  " + scenario.getName()));
-        log.info(CustomLogging.getLogMessage("---------------------------"));
-        log.info(CustomLogging.getLogMessage("\n"));
+        log.info(scenario.getUri());
+        log.info(scenario.getName());
     }
 }</code></pre>
                 <p></p>
