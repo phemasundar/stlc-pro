@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>STLCpro - Configuring Logs</title>
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+          rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../css/styles.css" rel="stylesheet"/>
+    <!-- Bootstrap CSS -->
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!-- Prism CSS for code highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="../index.html">STLCpro</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('../assets/img/logs.png')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>Importance of LogCat logs in Android automation test execution</h1>
+                    <!--                    <h2 class="subheading">Problems look mighty small from 150 miles up</h2>-->
+                    <span class="meta">
+                                Posted by
+                                <a href="#!">HemaSundar Penugonda</a>
+                                on Jun 18, 2020
+                            </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content-->
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p>In any software or application logs play a vital role. When something goes wrong in the application,
+                    logs are the first place one will check to find out what exactly happened. Generating proper log
+                    messages will reduce the time to fix any issue. This will be of much use in case of a production
+                    bug. This applies not just for development projects even for Test automation projects as well.</p>
+
+                <h2 class="section-heading">Different Logs available for Appium - Android</h2>
+                <p>In the case of UI test automation, whenever any test case fails first thing one will check is the
+                    screenshot which is a log of Image type. Contrary to most people's thinking, Logs are not just text
+                    messages. Screenshots, Screen records as well come under logs only. But these logs (screenshots,
+                    screen records, or log messages) are custom logs those generated as part of our code/framework.</p>
+                <p>By default, Appium provides the below log types for Android:</p>
+                <ul>
+                    <li>logcat</li>
+                    <li>bugreport</li>
+                    <li>server</li>
+                    <li>client</li>
+                </ul>
+                <p>In this article, we are going to discuss the importance of LogCat logs.</p>
+                <h2 class="section-heading">How to get LogCat logs</h2>
+                <p>Use the below code to get the logcat logs and write them into a text file:</p>
+                <pre><code class="language-java">
+public class TestHooks {
+    public void getLogcatLogs(AndroidDriver driver, String logFilePath) throws IOException {
+        if (TestData.getConfigData().getLogCatLogs()) {
+            String totalLogs = "";
+
+            LogEntries logEntries = driver.manage().logs().get("logcat");
+            List<LogEntry> all = logEntries.getAll();
+            List<String> logsInStringList = all.stream().map(LogEntry::toString).collect(Collectors.toList());
+
+            totalLogs = String.join("\n", logsInStringList);
+
+            Files.write(Paths.get(logFilePath), totalLogs.getBytes());
+        }
+    }
+}</code></pre>
+
+                <p>Please make sure to use a minimum of Java 8 for compiling the above code successfully.</p>
+
+                <h2 class="section-heading">Why LogCat logs are the Important?</h2>
+
+                <p>Whenever any test case fails most of the time just by seeing the screenshot of the mobile screen only
+                    we can identify the root cause for failure. But in some cases like application crashes, just by
+                    seeing the screenshot one can not say the root cause to fix the bug. And the worst part is 90% of
+                    the cases application crashes happen randomly (Won't happen every time you execute the test
+                    case).</p>
+                <p>Application crash might be triggered with some other third-party app in mobile or some issue with the
+                    backend API calls etc. In cases similar to this, logcat logs can be of great use for the dev team to
+                    find the root cause of the issue. Thus reducing the time of bug fix which ultimately helps in faster
+                    deliveries.</p>
+
+                <h2 class="section-heading">How to fix discarding LogCat log entries</h2>
+
+                <p>If you feel that you are not getting all the logcat logs for the current test, there might be a
+                    problem with the log buffer of the device. Please follow <a
+                            href="/stlc-pro/pages/update-logcat-buffersize">this</a> article to fix the issue.</p>
+
+                <p>I hope the above approach helps. Please let me know in the comments if any other ways of doing
+                    this.</p>
+
+
+                <p></p>
+            </div>
+        </div>
+    </div>
+</article>
+<!-- Footer-->
+<footer class="border-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="https://www.linkedin.com/in/hemasundarpenugonda/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://twitter.com/phemasundar">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://github.com/phemasundar">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; www.STLCpro.com 2024</div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="../js/scripts.js"></script>
+
+<!-- Prism JS for code highlighting -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-java.min.js"></script>
+
+</body>
+</html>
